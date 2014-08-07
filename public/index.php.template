@@ -1,0 +1,3 @@
+<?php
+
+require_once '@GAME_MONITOR_PATH@';
