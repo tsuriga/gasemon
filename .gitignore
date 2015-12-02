@@ -1,3 +1,4 @@
 vendor/*
 composer.lock
 db/gasemon.db
+config.ini
