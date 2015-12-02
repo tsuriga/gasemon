@@ -5,12 +5,12 @@ namespace gasemon;
 use \Codebird\Codebird;
 
 /**
- * Tweets information on server statuses
+ * Tweets information on AHL server statuses
  */
-class TweetBot implements ServerProcessorInterface
+class AhlTweetBot implements ServerProcessorInterface
 {
-    const MAPNAME_MAXLENGTH = 24;
-    const HOSTNAME_MAXLENGTH = 36;
+    const MAPNAME_MAXLENGTH = 34;
+    const HOSTNAME_MAXLENGTH = 56;
 
     /**
      * @var int
@@ -56,7 +56,7 @@ class TweetBot implements ServerProcessorInterface
         $playerCount = 0;
 
         foreach ($servers as $aServer) {
-            $playerCount += $aServer['num_players'];
+            $playerCount += $aServer['num_players'] - $aServer['num_bots'];
 
             if ($aServer['num_players'] > $server['num_players']) {
                 $server = $aServer;
@@ -64,14 +64,13 @@ class TweetBot implements ServerProcessorInterface
         }
 
         $msg = sprintf(
-            "%d players on %d servers. %d/%d players on '%s' (%s). Join: %s",
+            "%d players on %d servers. %d/%d players on '%s' (%s)",
             $playerCount,
             count($servers),
-            $server['num_players'],
+            $server['num_players'] - $server['num_bots'],
             $server['max_players'],
             $this->abbreviate($server['hostname'], self::HOSTNAME_MAXLENGTH),
-            $this->abbreviate(server['map'], self::MAPNAME_MAXLENGTH),
-            $server['gq_joinlink']
+            $this->abbreviate($server['map'], self::MAPNAME_MAXLENGTH)
         );
 
         $this->cb->statuses_update(['status' => $msg]);

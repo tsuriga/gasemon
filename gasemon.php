@@ -14,7 +14,7 @@ require_once 'lib/autoload.php';
 $db = new SQLite3('data/gasemon.db');
 $ini = parse_ini_file('config.ini');
 
-$tweetBot = new gasemon\TweetBot(
+$tweetBot = new gasemon\AhlTweetBot(
     $ini['tweetbot.cooldown'],
     $ini['tweetbot.consumerKey'],
     $ini['tweetbot.consumerSecret'],
