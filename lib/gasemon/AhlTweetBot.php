@@ -23,20 +23,20 @@ class AhlTweetBot implements ServerProcessorInterface
     private $cb;
 
     /**
-     * @param int $cooldownSeconds
+     * @param int $cooldownMinutes
      * @param string $consumerKey
      * @param string $consumerSecret
      * @param string $accessToken
      * @param string $accessTokenSecret
      */
     public function __construct(
-        $cooldownTime,
+        $cooldownMinutes,
         $consumerKey,
         $consumerSecret,
         $accessToken,
         $accessTokenSecret
     ) {
-        $this->cooldownSeconds = $cooldownTime * 60;
+        $this->cooldownSeconds = $cooldownMinutes * 60;
 
         $this->cb = new Codebird();
         $this->cb->setConsumerKey($consumerKey, $consumerSecret);
@@ -98,7 +98,7 @@ class AhlTweetBot implements ServerProcessorInterface
             return false;
         }
 
-        return time() - file_get_contents('data/tweet.lock') >
+        return time() - file_get_contents('data/tweet.lock') <
             $this->cooldownSeconds;
     }
 }
