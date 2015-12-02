@@ -1,5 +1,6 @@
 {
     "require": {
-        "austinb/gameq": "2.*@dev"
+        "austinb/gameq": "2.*@dev",
+        "jublonet/codebird-php": "2.7.*"
     }
 }
