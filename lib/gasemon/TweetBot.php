@@ -9,7 +9,7 @@ use \Codebird\Codebird;
  */
 class TweetBot implements ServerProcessorInterface
 {
-    const MAPNAME_MAXLENGTH = 24
+    const MAPNAME_MAXLENGTH = 24;
     const HOSTNAME_MAXLENGTH = 36;
 
     /**
