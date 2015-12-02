@@ -4,5 +4,5 @@ namespace gasemon;
 
 interface ServerProcessorInterface
 {
-    public function process(array $servers);
+    public process(array $servers);
 }

@@ -20,7 +20,7 @@ class ServerMonitor
         $gameType
     ) {
         $this->db = $db;
-        $this->processor = $processor;
+        $this->processor;
         $this->gameType = $gameType;
 
         $this->gameQ = new \GameQ();
