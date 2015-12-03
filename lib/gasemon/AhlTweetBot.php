@@ -84,6 +84,8 @@ class AhlTweetBot implements ServerProcessorInterface
         );
 
         $this->cb->statuses_update(['status' => $msg]);
+
+        $this->activateCooldownPeriod();
     }
 
     /**
@@ -111,12 +113,15 @@ class AhlTweetBot implements ServerProcessorInterface
     private function isInCooldownPeriod()
     {
         if (!file_exists('data/tweet.lock')) {
-            file_put_contents('data/tweet.lock', time());
-
             return false;
         }
 
         return time() - file_get_contents('data/tweet.lock') <
             $this->cooldownSeconds;
+    }
+
+    private function activateCooldownPeriod()
+    {
+        file_put_contents('data/tweet.lock', time());
     }
 }
