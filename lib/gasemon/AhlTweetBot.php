@@ -9,8 +9,20 @@ use \Codebird\Codebird;
  */
 class AhlTweetBot implements ServerProcessorInterface
 {
+    /**
+     * @var int Maximum length for the map name in a post
+     */
     const MAPNAME_MAXLENGTH = 34;
+
+    /**
+     * @var int Maximum length for server's name in a post
+     */
     const HOSTNAME_MAXLENGTH = 56;
+
+    /**
+     * @var int Minimum player count required for posting
+     */
+    const PLAYER_COUNT_MINIMUM = 2;
 
     /**
      * @var int
@@ -58,9 +70,12 @@ class AhlTweetBot implements ServerProcessorInterface
         $activeServerCount = 0;
 
         foreach ($servers as $aServer) {
-            $playerCount += @$aServer['num_players'] - @$aServer['num_bots'];
+            $aServerPlayerCount =
+                @$aServer['num_players'] - @$aServer['num_bots'];
 
-            if (@$aServer['num_players'] > 0) {
+            $playerCount += $aServerPlayerCount;
+
+            if ($aServerPlayerCount > 0) {
                 $activeServerCount++;
             }
 
@@ -69,7 +84,11 @@ class AhlTweetBot implements ServerProcessorInterface
             }
         }
 
-        if ($playerCount === 0) {
+        $serverPlayerCount = $server['num_players'] - $server['num_bots'];
+
+        if ($playerCount === 0 ||
+            $serverPlayerCount < self::PLAYER_COUNT_MINIMUM
+        ) {
             return;
         }
 
@@ -77,7 +96,7 @@ class AhlTweetBot implements ServerProcessorInterface
             "%d players on %d servers. %d/%d players on '%s' (%s)",
             $playerCount,
             $activeServerCount,
-            $server['num_players'] - $server['num_bots'],
+            $serverPlayerCount,
             $server['max_players'],
             $this->abbreviate($server['hostname'], self::HOSTNAME_MAXLENGTH),
             $this->abbreviate($server['map'], self::MAPNAME_MAXLENGTH)
