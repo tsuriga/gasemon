@@ -20,14 +20,14 @@ class AhlTweetBot implements ServerProcessorInterface
     const HOSTNAME_MAXLENGTH = 56;
 
     /**
-     * @var int Minimum player count required for posting
-     */
-    const PLAYER_COUNT_MINIMUM = 2;
-
-    /**
      * @var int
      */
     private $cooldownSeconds;
+
+    /**
+     * @var int Minimum player count required for posting
+     */
+    private $minimumPlayerCount;
 
     /**
      * @var Codebird
@@ -36,6 +36,7 @@ class AhlTweetBot implements ServerProcessorInterface
 
     /**
      * @param int $cooldownMinutes
+     * @param int $minimumPlayerCount
      * @param string $consumerKey
      * @param string $consumerSecret
      * @param string $accessToken
@@ -43,12 +44,14 @@ class AhlTweetBot implements ServerProcessorInterface
      */
     public function __construct(
         $cooldownMinutes,
+        $minimumPlayerCount,
         $consumerKey,
         $consumerSecret,
         $accessToken,
         $accessTokenSecret
     ) {
         $this->cooldownSeconds = $cooldownMinutes * 60;
+        $this->minimumPlayerCount = $minimumPlayerCount;
 
         $this->cb = new Codebird();
         $this->cb->setConsumerKey($consumerKey, $consumerSecret);
@@ -66,14 +69,14 @@ class AhlTweetBot implements ServerProcessorInterface
 
         $server = reset($servers);
 
-        $playerCount = 0;
+        $totalPlayerCount = 0;
         $activeServerCount = 0;
 
         foreach ($servers as $aServer) {
             $aServerPlayerCount =
                 @$aServer['num_players'] - @$aServer['num_bots'];
 
-            $playerCount += $aServerPlayerCount;
+            $totalPlayerCount += $aServerPlayerCount;
 
             if ($aServerPlayerCount > 0) {
                 $activeServerCount++;
@@ -86,15 +89,15 @@ class AhlTweetBot implements ServerProcessorInterface
 
         $serverPlayerCount = $server['num_players'] - $server['num_bots'];
 
-        if ($playerCount === 0 ||
-            $serverPlayerCount < self::PLAYER_COUNT_MINIMUM
+        if ($totalPlayerCount === 0 ||
+            $serverPlayerCount < $this->minimumPlayerCount
         ) {
             return;
         }
 
         $msg = sprintf(
             "%d players on %d servers. %d/%d players on '%s' (%s)",
-            $playerCount,
+            $totalPlayerCount,
             $activeServerCount,
             $serverPlayerCount,
             $server['max_players'],

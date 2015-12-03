@@ -18,6 +18,7 @@ $ini = parse_ini_file('config.ini');
 
 $tweetBot = new gasemon\AhlTweetBot(
     $ini['tweetbot.cooldown'],
+    $ini['tweetbot.minimumPlayerCount'],
     $ini['tweetbot.consumerKey'],
     $ini['tweetbot.consumerSecret'],
     $ini['tweetbot.accessToken'],
