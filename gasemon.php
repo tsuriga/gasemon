@@ -8,6 +8,8 @@
  * @version 1.0
  */
 
+chdir(__DIR__);
+
 require_once 'vendor/autoload.php';
 require_once 'lib/autoload.php';
 
