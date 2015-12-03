@@ -48,13 +48,23 @@ class AhlTweetBot implements ServerProcessorInterface
      */
     public function process(array $servers)
     {
+        if (count($servers) < 1) {
+            return;
+        }
+
         $server = reset($servers);
+
         $playerCount = 0;
+        $activeServerCount = 0;
 
         foreach ($servers as $aServer) {
-            $playerCount += $aServer['num_players'] - $aServer['num_bots'];
+            $playerCount += @$aServer['num_players'] - @$aServer['num_bots'];
 
-            if ($aServer['num_players'] > $server['num_players']) {
+            if (@$aServer['num_players'] > 0) {
+                $activeServerCount++;
+            }
+
+            if (@$aServer['num_players'] > @$server['num_players']) {
                 $server = $aServer;
             }
         }
@@ -66,7 +76,7 @@ class AhlTweetBot implements ServerProcessorInterface
         $msg = sprintf(
             "%d players on %d servers. %d/%d players on '%s' (%s)",
             $playerCount,
-            count($servers),
+            $activeServerCount,
             $server['num_players'] - $server['num_bots'],
             $server['max_players'],
             $this->abbreviate($server['hostname'], self::HOSTNAME_MAXLENGTH),
