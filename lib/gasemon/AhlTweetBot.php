@@ -48,11 +48,7 @@ class AhlTweetBot implements ServerProcessorInterface
      */
     public function process(array $servers)
     {
-        if ($this->cooldownIsActive()) {
-            return;
-        }
-
-        $server = $servers[0];
+        $server = reset($servers);
         $playerCount = 0;
 
         foreach ($servers as $aServer) {
@@ -61,6 +57,10 @@ class AhlTweetBot implements ServerProcessorInterface
             if ($aServer['num_players'] > $server['num_players']) {
                 $server = $aServer;
             }
+        }
+
+        if ($playerCount === 0) {
+            return;
         }
 
         $msg = sprintf(
@@ -77,6 +77,14 @@ class AhlTweetBot implements ServerProcessorInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return !$this->isInCooldownPeriod();
+    }
+
+    /**
      * @param string $str
      * @param int $maxLength
      * @return string
@@ -90,7 +98,7 @@ class AhlTweetBot implements ServerProcessorInterface
     /**
      * @return bool
      */
-    private function cooldownIsActive()
+    private function isInCooldownPeriod()
     {
         if (!file_exists('data/tweet.lock')) {
             file_put_contents('data/tweet.lock', time());

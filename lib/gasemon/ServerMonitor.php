@@ -42,19 +42,14 @@ class ServerMonitor
 
     public function runCheck()
     {
+        if (!$this->processor->isActive()) {
+            return;
+        }
+
         $this->loadServers();
+
         $serverInfo = $this->gameQ->requestData();
 
-        $activeServers = [];
-
-        foreach ($serverInfo as $server) {
-            if ($server['num_players'] > 0) {
-                $activeServers[] = $server;
-            }
-        }
-
-        if (count($activeServers) > 0) {
-            $this->processor->process($activeServers);
-        }
+        $this->processor->process($serverInfo);
     }
 }
