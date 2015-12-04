@@ -6,9 +6,8 @@ connection.
 
 Coded with love for the Action Half-Life community.
 
-Includes Twitter connector – other type of processors should be relatively
-easy to create by inheriting ServerProcessorInterface and implementing its
-methods.
+Includes Twitter connector for Action Half-Life. Other type of processors can be
+created by implementing ServerProcessorInterface and its methods.
 
 Requires at least PHP 5.4 with SSL and SQLite3 support, and Composer.
 
