@@ -87,7 +87,7 @@ class AhlTweetBot implements ServerProcessorInterface
             }
         }
 
-        $serverPlayerCount = $server['num_players'] - $server['num_bots'];
+        $serverPlayerCount = @$server['num_players'] - @$server['num_bots'];
 
         if ($totalPlayerCount === 0 ||
             $serverPlayerCount < $this->minimumPlayerCount
