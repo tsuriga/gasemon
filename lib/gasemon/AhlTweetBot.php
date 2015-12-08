@@ -12,12 +12,12 @@ class AhlTweetBot implements ServerProcessorInterface
     /**
      * @var int Maximum length for the map name in a post
      */
-    const MAPNAME_MAXLENGTH = 34;
+    const MAPNAME_MAXLENGTH = 46;
 
     /**
      * @var int Maximum length for server's name in a post
      */
-    const HOSTNAME_MAXLENGTH = 56;
+    const HOSTNAME_MAXLENGTH = 70;
 
     /**
      * @var int
@@ -63,42 +63,27 @@ class AhlTweetBot implements ServerProcessorInterface
      */
     public function process(array $servers)
     {
-        if (count($servers) < 1) {
-            return;
-        }
-
         $server = reset($servers);
-
-        $totalPlayerCount = 0;
-        $activeServerCount = 0;
 
         foreach ($servers as $aServer) {
             $aServerPlayerCount =
                 @$aServer['num_players'] - @$aServer['num_bots'];
+            $serverPlayerCount =
+                @$server['num_players'] - @$server['num_bots'];
 
-            $totalPlayerCount += $aServerPlayerCount;
-
-            if ($aServerPlayerCount > 0) {
-                $activeServerCount++;
-            }
-
-            if (@$aServer['num_players'] > @$server['num_players']) {
+            if ($aServerPlayerCount > $serverPlayerCount) {
                 $server = $aServer;
             }
         }
 
         $serverPlayerCount = @$server['num_players'] - @$server['num_bots'];
 
-        if ($totalPlayerCount === 0 ||
-            $serverPlayerCount < $this->minimumPlayerCount
-        ) {
+        if ($serverPlayerCount < $this->minimumPlayerCount) {
             return;
         }
 
         $msg = sprintf(
-            "%d players on %d servers. %d/%d players on '%s' (%s)",
-            $totalPlayerCount,
-            $activeServerCount,
+            "%d/%d players on '%s' (%s)",
             $serverPlayerCount,
             $server['max_players'],
             $this->abbreviate($server['hostname'], self::HOSTNAME_MAXLENGTH),
