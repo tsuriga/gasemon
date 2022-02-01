@@ -16,12 +16,14 @@ Requires at least PHP 5.4 with SSL and SQLite3 support, and Composer.
 
 Note that you'll then have to command *php56* instead of *php*
 
-###Usage###
+### Usage
 
 * Run *php composer.phar install* or *composer install* (depending on your
   Composer installation)
 * Run *php setup.php*
+* Add server addresses to the created *data/gasemon.db* file with SQLite
 * Configure cooldown period and add your Twitter keys and secrets into
   *config.ini* if you're using the default TweetBot as server list processor
+* Run gasemon.php
 
 -tsuriga, 2015
